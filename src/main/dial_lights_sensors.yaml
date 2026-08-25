@@ -7,15 +7,15 @@ text_sensor:
       - script.execute: menu_on_ha_update
 
   - platform: homeassistant
-    id: dial_light_mesa_state
-    entity_id: light.mesa
+    id: dial_light_living_room_state
+    entity_id: light.living_room_light_group
     internal: true
     on_value:
       - script.execute: menu_on_ha_update
 
   - platform: homeassistant
-    id: dial_light_jardin_state
-    entity_id: light.luces_jardin
+    id: dial_light_bedroom_state
+    entity_id: light.bedroom_light_group
     internal: true
     on_value:
       - script.execute: menu_on_ha_update
@@ -27,14 +27,14 @@ text_sensor:
     internal: true
 
   - platform: homeassistant
-    id: dial_light_mesa_modes
-    entity_id: light.mesa
+    id: dial_light_living_room_modes
+    entity_id: light.living_room_light_group
     attribute: supported_color_modes
     internal: true
 
   - platform: homeassistant
-    id: dial_light_jardin_modes
-    entity_id: light.luces_jardin
+    id: dial_light_bedroom_modes
+    entity_id: light.bedroom_light_group
     attribute: supported_color_modes
     internal: true
 
@@ -45,14 +45,14 @@ text_sensor:
     internal: true
 
   - platform: homeassistant
-    id: dial_light_mesa_rgb
-    entity_id: light.mesa
+    id: dial_light_living_room_rgb
+    entity_id: light.living_room_light_group
     attribute: rgb_color
     internal: true
 
   - platform: homeassistant
-    id: dial_light_jardin_rgb
-    entity_id: light.luces_jardin
+    id: dial_light_bedroom_rgb
+    entity_id: light.bedroom_light_group
     attribute: rgb_color
     internal: true
 
@@ -63,14 +63,14 @@ text_sensor:
     internal: true
 
   - platform: homeassistant
-    id: dial_light_mesa_color_mode
-    entity_id: light.mesa
+    id: dial_light_living_room_color_mode
+    entity_id: light.living_room_light_group
     attribute: color_mode
     internal: true
 
   - platform: homeassistant
-    id: dial_light_jardin_color_mode
-    entity_id: light.luces_jardin
+    id: dial_light_bedroom_color_mode
+    entity_id: light.bedroom_light_group
     attribute: color_mode
     internal: true
 
@@ -84,16 +84,16 @@ sensor:
       - script.execute: menu_on_ha_update
 
   - platform: homeassistant
-    id: dial_light_mesa_brightness
-    entity_id: light.mesa
+    id: dial_light_living_room_brightness
+    entity_id: light.living_room_light_group
     attribute: brightness
     internal: true
     on_value:
       - script.execute: menu_on_ha_update
 
   - platform: homeassistant
-    id: dial_light_jardin_brightness
-    entity_id: light.luces_jardin
+    id: dial_light_bedroom_brightness
+    entity_id: light.bedroom_light_group
     attribute: brightness
     internal: true
     on_value:
@@ -106,14 +106,14 @@ sensor:
     internal: true
 
   - platform: homeassistant
-    id: dial_light_mesa_color_temp_kelvin
-    entity_id: light.mesa
+    id: dial_light_living_room_color_temp_kelvin
+    entity_id: light.living_room_light_group
     attribute: color_temp_kelvin
     internal: true
 
   - platform: homeassistant
-    id: dial_light_jardin_color_temp_kelvin
-    entity_id: light.luces_jardin
+    id: dial_light_bedroom_color_temp_kelvin
+    entity_id: light.bedroom_light_group
     attribute: color_temp_kelvin
     internal: true
 
@@ -124,14 +124,14 @@ sensor:
     internal: true
 
   - platform: homeassistant
-    id: dial_light_mesa_min_color_temp_kelvin
-    entity_id: light.mesa
+    id: dial_light_living_room_min_color_temp_kelvin
+    entity_id: light.living_room_light_group
     attribute: min_color_temp_kelvin
     internal: true
 
   - platform: homeassistant
-    id: dial_light_jardin_min_color_temp_kelvin
-    entity_id: light.luces_jardin
+    id: dial_light_bedroom_min_color_temp_kelvin
+    entity_id: light.bedroom_light_group
     attribute: min_color_temp_kelvin
     internal: true
 
@@ -142,13 +142,13 @@ sensor:
     internal: true
 
   - platform: homeassistant
-    id: dial_light_mesa_max_color_temp_kelvin
-    entity_id: light.mesa
+    id: dial_light_living_room_max_color_temp_kelvin
+    entity_id: light.living_room_light_group
     attribute: max_color_temp_kelvin
     internal: true
 
   - platform: homeassistant
-    id: dial_light_jardin_max_color_temp_kelvin
-    entity_id: light.luces_jardin
+    id: dial_light_bedroom_max_color_temp_kelvin
+    entity_id: light.bedroom_light_group
     attribute: max_color_temp_kelvin
     internal: true
