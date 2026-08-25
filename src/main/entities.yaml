@@ -1,6 +1,6 @@
 substitutions:
   # Change these to match your Home Assistant instance before flashing.
   weather_entity: sensor.openweathermap_weather
-  aqi_entity: sensor.core_600s_air_quality
+  humidity_entity: sensor.belmont_gardens_humidity
   climate_entity: climate.150633095570064_climate
   music_player_entity: media_player.sonos_era
