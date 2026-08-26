@@ -376,7 +376,7 @@ script:
               : std::string("${light_entity}");
           ESP_LOGI("light_ha", "send_light_turn_off entity=%s multilight=%s",
                    target_entity.c_str(), id(light_multilight_active) ? "yes" : "no");
-      - light.toggle: "{{ target_entity }}"
+      - light.turn_off: "{{ target_entity }}"
       - homeassistant.action:
           service: light.turn_off
           data_template:
