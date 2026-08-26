@@ -53,7 +53,6 @@ external_components:
 
 substitutions:
   timezone: America/Chicago
-  light_entity: light.bedroom_light_group
   # Remote packages cannot resolve !secret themselves. Set these from the
   # consumer configuration (usually with !secret values in that local file).
   device_name: m5stack-dialv1
