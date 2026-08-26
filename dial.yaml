@@ -3,7 +3,7 @@ packages:
   hardware:    !include src/main/hardware.yaml
   entities:      !include src/main/entities.yaml
   entities_demo: !include src/main/entities_demo.yaml
-  dial_lights_sensors: !include src/main/dial_lights_sensors.yaml
+  # dial_lights_sensors: !include src/main/dial_lights_sensors.yaml
   load_page:   !include src/pages/load.yaml
   clock_page:  !include src/pages/main.yaml
   menu_page:   !include src/pages/menu.yaml
