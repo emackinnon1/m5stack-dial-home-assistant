@@ -19,35 +19,37 @@ external_components:
     components: [dial_lights, dial_carousel]
     refresh: 0s
 
-# dial_lights: []
-  # - entity_id: light.office_light_group
-  #   name: Office
-  #   state_sensor: dial_light_office_state
-  #   modes_sensor: dial_light_office_modes
-  #   brightness_sensor: dial_light_office_brightness
-  #   color_sensor: dial_light_office_rgb
-  #   color_mode_sensor: dial_light_office_color_mode
-  #   color_temp_kelvin_sensor: dial_light_office_color_temp_kelvin
-  #   min_color_temp_kelvin_sensor: dial_light_office_min_color_temp_kelvin
-  #   max_color_temp_kelvin_sensor: dial_light_office_max_color_temp_kelvin
-  # - entity_id: light.living_room_light_group
-#     name: Living Room
-#     state_sensor: dial_light_living_room_state
-#     modes_sensor: dial_light_living_room_modes
-#     brightness_sensor: dial_light_living_room_brightness
-#     color_sensor: dial_light_living_room_rgb
-#     color_mode_sensor: dial_light_living_room_color_mode
-#     color_temp_kelvin_sensor: dial_light_living_room_color_temp_kelvin
-#     min_color_temp_kelvin_sensor: dial_light_living_room_min_color_temp_kelvin
-#     max_color_temp_kelvin_sensor: dial_light_living_room_max_color_temp_kelvin
-#   - entity_id: light.bedroom_light_group
-#     name: Bedroom
-#     state_sensor: dial_light_bedroom_state
-#     modes_sensor: dial_light_bedroom_modes
-#     brightness_sensor: dial_light_bedroom_brightness
-#     color_sensor: dial_light_bedroom_rgb
-#     color_mode_sensor: dial_light_bedroom_color_mode
-#     color_temp_kelvin_sensor: dial_light_bedroom_color_temp_kelvin
+dial_lights:
+  - entity_id: light.office_light_group
+    name: Office
+    state_sensor: dial_light_office_state
+    modes_sensor: dial_light_office_modes
+    brightness_sensor: dial_light_office_brightness
+    color_sensor: dial_light_office_rgb
+    color_mode_sensor: dial_light_office_color_mode
+    color_temp_kelvin_sensor: dial_light_office_color_temp_kelvin
+    min_color_temp_kelvin_sensor: dial_light_office_min_color_temp_kelvin
+    max_color_temp_kelvin_sensor: dial_light_office_max_color_temp_kelvin
+  - entity_id: light.living_room_light_group
+    name: Living Room
+    state_sensor: dial_light_living_room_state
+    modes_sensor: dial_light_living_room_modes
+    brightness_sensor: dial_light_living_room_brightness
+    color_sensor: dial_light_living_room_rgb
+    color_mode_sensor: dial_light_living_room_color_mode
+    color_temp_kelvin_sensor: dial_light_living_room_color_temp_kelvin
+    min_color_temp_kelvin_sensor: dial_light_living_room_min_color_temp_kelvin
+    max_color_temp_kelvin_sensor: dial_light_living_room_max_color_temp_kelvin
+  - entity_id: light.bedroom_light_group
+    name: Bedroom
+    state_sensor: dial_light_bedroom_state
+    modes_sensor: dial_light_bedroom_modes
+    brightness_sensor: dial_light_bedroom_brightness
+    color_sensor: dial_light_bedroom_rgb
+    color_mode_sensor: dial_light_bedroom_color_mode
+    color_temp_kelvin_sensor: dial_light_bedroom_color_temp_kelvin
+    min_color_temp_kelvin_sensor: dial_light_bedroom_min_color_temp_kelvin
+    max_color_temp_kelvin_sensor: dial_light_bedroom_max_color_temp_kelvin
 #     min_color_temp_kelvin_sensor: dial_light_bedroom_min_color_temp_kelvin
 #     max_color_temp_kelvin_sensor: dial_light_bedroom_max_color_temp_kelvin
 
