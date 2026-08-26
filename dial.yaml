@@ -20,16 +20,16 @@ external_components:
     refresh: 0s
 
 dial_lights:
-  - entity_id: light.office_light_group
-    name: Office
-    state_sensor: dial_light_office_state
-    modes_sensor: dial_light_office_modes
-    brightness_sensor: dial_light_office_brightness
-    color_sensor: dial_light_office_rgb
-    color_mode_sensor: dial_light_office_color_mode
-    color_temp_kelvin_sensor: dial_light_office_color_temp_kelvin
-    min_color_temp_kelvin_sensor: dial_light_office_min_color_temp_kelvin
-    max_color_temp_kelvin_sensor: dial_light_office_max_color_temp_kelvin
+  # - entity_id: light.office_light_group
+  #   name: Office
+  #   state_sensor: dial_light_office_state
+  #   modes_sensor: dial_light_office_modes
+  #   brightness_sensor: dial_light_office_brightness
+  #   color_sensor: dial_light_office_rgb
+  #   color_mode_sensor: dial_light_office_color_mode
+  #   color_temp_kelvin_sensor: dial_light_office_color_temp_kelvin
+  #   min_color_temp_kelvin_sensor: dial_light_office_min_color_temp_kelvin
+  #   max_color_temp_kelvin_sensor: dial_light_office_max_color_temp_kelvin
   - entity_id: light.living_room_light_group
     name: Living Room
     state_sensor: dial_light_living_room_state
