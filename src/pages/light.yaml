@@ -368,11 +368,16 @@ script:
 
   - id: send_light_turn_off
     then:
+      - lambda: |-
+          std::string target_entity = id(light_multilight_active)
+              ? id(dial_lights_id).active_entity_id()
+              : std::string("${light_entity}");
+          ESP_LOGI("light_ha", "send_light_turn_off entity=%s multilight=%s",
+                   target_entity.c_str(), id(light_multilight_active) ? "yes" : "no");
       - homeassistant.action:
           action: light.turn_off
           data_template:
-            # entity_id: "{{ target_entity }}"
-            entity_id: light.office_light_group
+            entity_id: "{{ target_entity }}"
           variables:
             target_entity: !lambda |-
               if (id(light_multilight_active)) {
