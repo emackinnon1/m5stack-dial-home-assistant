@@ -378,7 +378,7 @@ script:
       - light.turn_off: "{{ target_entity }}"
       - homeassistant.action:
           service: light.turn_off
-          data_template:
+          data:
             entity_id: "{{ target_entity }}"
           variables:
             target_entity: !lambda |-
