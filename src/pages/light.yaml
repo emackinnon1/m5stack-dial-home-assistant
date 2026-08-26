@@ -368,8 +368,7 @@ script:
 
   - id: send_light_turn_off
     then:
-      - logger.log: "Trying to turn off light: "
-      - logger.log: "{{ target_entity }}"
+      - logger.log: "Trying to turn off light {{ target_entity }}"
       - lambda: |-
           std::string target_entity = id(light_multilight_active)
               ? id(dial_lights_id).active_entity_id()
