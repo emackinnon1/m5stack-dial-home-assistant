@@ -368,17 +368,15 @@ script:
 
   - id: send_light_turn_off
     then:
-      - logger.log: "Trying to turn off light {{ target_entity }}"
       - lambda: |-
           std::string target_entity = id(light_multilight_active)
               ? id(dial_lights_id).active_entity_id()
               : std::string("${light_entity}");
           ESP_LOGI("light_ha", "send_light_turn_off entity=%s multilight=%s",
                    target_entity.c_str(), id(light_multilight_active) ? "yes" : "no");
-      # - light.turn_off: "{{ target_entity }}"
-      - homeassistant.service:
-          service: light.turn_off
-          data:
+      - homeassistant.action:
+          action: light.turn_off
+          data_template:
             entity_id: "{{ target_entity }}"
           variables:
             target_entity: !lambda |-
