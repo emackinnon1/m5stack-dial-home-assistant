@@ -1,10 +1,10 @@
 text_sensor:
-  # - platform: homeassistant
-  #   id: dial_light_office_state
-  #   entity_id: light.office_light_group
-  #   internal: true
-  #   on_value:
-  #     - script.execute: menu_on_ha_update
+  - platform: homeassistant
+    id: dial_light_office_state
+    entity_id: light.office_light_group
+    internal: true
+    on_value:
+      - script.execute: menu_on_ha_update
 
   - platform: homeassistant
     id: dial_light_living_room_state
