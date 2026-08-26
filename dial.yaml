@@ -50,8 +50,6 @@ dial_lights:
     color_temp_kelvin_sensor: dial_light_bedroom_color_temp_kelvin
     min_color_temp_kelvin_sensor: dial_light_bedroom_min_color_temp_kelvin
     max_color_temp_kelvin_sensor: dial_light_bedroom_max_color_temp_kelvin
-#     min_color_temp_kelvin_sensor: dial_light_bedroom_min_color_temp_kelvin
-#     max_color_temp_kelvin_sensor: dial_light_bedroom_max_color_temp_kelvin
 
 substitutions:
   timezone: America/Chicago
