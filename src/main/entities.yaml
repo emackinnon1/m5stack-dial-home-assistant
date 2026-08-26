@@ -1,5 +1,4 @@
 substitutions:
   # Change these to match your Home Assistant instance before flashing.
-  weather_entity: sensor.openweathermap_weather
-  climate_entity: climate.150633095570064_climate
-  music_player_entity: media_player.sonos_era
+  weather_entity: weather.your_location
+  aqi_entity: sensor.jardin_aqi
