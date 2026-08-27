@@ -234,7 +234,7 @@ script:
             lambda: 'return id(light_supports_brightness);'
           then:
             - homeassistant.action:
-                service: light.turn_on
+                action: light.turn_on
                 data_template:
                   entity_id: "{{ target_entity }}"
                   color_temp_kelvin: "{{ kelvin | int }}"
