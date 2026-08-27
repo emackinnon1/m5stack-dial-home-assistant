@@ -1,14 +1,37 @@
 text_sensor:
+### living_room
+
   - platform: homeassistant
-    id: dial_light_office_state
-    entity_id: light.office_light_group
+    id: dial_light_living_room_state
+    entity_id: light.living_room_light_group
     internal: true
     on_value:
       - script.execute: menu_on_ha_update
 
   - platform: homeassistant
-    id: dial_light_living_room_state
+    id: dial_light_living_room_modes
     entity_id: light.living_room_light_group
+    attribute: supported_color_modes
+    internal: true
+
+  - platform: homeassistant
+    id: dial_light_living_room_rgb
+    entity_id: light.living_room_light_group
+    attribute: rgb_color
+    internal: true
+
+  - platform: homeassistant
+    id: dial_light_living_room_color_mode
+    entity_id: light.living_room_light_group
+    attribute: color_mode
+    internal: true
+
+
+### living_room
+
+  - platform: homeassistant
+    id: dial_light_office_state
+    entity_id: light.office_light_group
     internal: true
     on_value:
       - script.execute: menu_on_ha_update
@@ -27,12 +50,6 @@ text_sensor:
     internal: true
 
   - platform: homeassistant
-    id: dial_light_living_room_modes
-    entity_id: light.living_room_light_group
-    attribute: supported_color_modes
-    internal: true
-
-  - platform: homeassistant
     id: dial_light_bedroom_modes
     entity_id: light.bedroom_light_group
     attribute: supported_color_modes
@@ -41,12 +58,6 @@ text_sensor:
   - platform: homeassistant
     id: dial_light_office_rgb
     entity_id: light.office_light_group
-    attribute: rgb_color
-    internal: true
-
-  - platform: homeassistant
-    id: dial_light_living_room_rgb
-    entity_id: light.living_room_light_group
     attribute: rgb_color
     internal: true
 
@@ -63,29 +74,207 @@ text_sensor:
     internal: true
 
   - platform: homeassistant
-    id: dial_light_living_room_color_mode
-    entity_id: light.living_room_light_group
-    attribute: color_mode
-    internal: true
-
-  - platform: homeassistant
     id: dial_light_bedroom_color_mode
     entity_id: light.bedroom_light_group
     attribute: color_mode
     internal: true
 
-sensor:
+### living_room_1_light
+
   - platform: homeassistant
-    id: dial_light_office_brightness
-    entity_id: light.office_light_group
+    id: dial_light_living_room_1_light_state
+    entity_id: light.living_room_1_light_sengled
+    internal: true
+    on_value:
+      - script.execute: menu_on_ha_update
+
+  - platform: homeassistant
+    id: dial_light_living_room_1_light_modes
+    entity_id: light.living_room_1_light_sengled
+    attribute: supported_color_modes
+    internal: true
+
+  - platform: homeassistant
+    id: dial_light_living_room_1_light_rgb
+    entity_id: light.living_room_1_light_sengled
+    attribute: rgb_color
+    internal: true
+
+  - platform: homeassistant
+    id: dial_light_living_room_1_light_color_mode
+    entity_id: light.living_room_1_light_sengled
+    attribute: color_mode
+    internal: true
+
+### living_room_2_light
+
+  - platform: homeassistant
+    id: dial_light_living_room_2_light_state
+    entity_id: light.living_room_2_light_sengled
+    internal: true
+    on_value:
+      - script.execute: menu_on_ha_update
+
+  - platform: homeassistant
+    id: dial_light_living_room_2_light_modes
+    entity_id: light.living_room_2_light_sengled
+    attribute: supported_color_modes
+    internal: true
+
+  - platform: homeassistant
+    id: dial_light_living_room_2_light_rgb
+    entity_id: light.living_room_2_light_sengled
+    attribute: rgb_color
+    internal: true
+
+  - platform: homeassistant
+    id: dial_light_living_room_2_light_color_mode
+    entity_id: light.living_room_2_light_sengled
+    attribute: color_mode
+    internal: true
+
+### living_room_light_3
+
+  - platform: homeassistant
+    id: dial_light_living_room_light_3_state
+    entity_id: light.living_room_light_3_thirdreality
+    internal: true
+    on_value:
+      - script.execute: menu_on_ha_update
+
+  - platform: homeassistant
+    id: dial_light_living_room_light_3_modes
+    entity_id: light.living_room_light_3_thirdreality
+    attribute: supported_color_modes
+    internal: true
+
+  - platform: homeassistant
+    id: dial_light_living_room_light_3_rgb
+    entity_id: light.living_room_light_3_thirdreality
+    attribute: rgb_color
+    internal: true
+
+  - platform: homeassistant
+    id: dial_light_living_room_light_3_color_mode
+    entity_id: light.living_room_light_3_thirdreality
+    attribute: color_mode
+    internal: true
+
+### living_room_light_4
+
+  - platform: homeassistant
+    id: dial_light_living_room_light_4_state
+    entity_id: light.living_room_light_4_thirdreality
+    internal: true
+    on_value:
+      - script.execute: menu_on_ha_update
+
+  - platform: homeassistant
+    id: dial_light_living_room_light_4_modes
+    entity_id: light.living_room_light_4_thirdreality
+    attribute: supported_color_modes
+    internal: true
+
+  - platform: homeassistant
+    id: dial_light_living_room_light_4_rgb
+    entity_id: light.living_room_light_4_thirdreality
+    attribute: rgb_color
+    internal: true
+
+  - platform: homeassistant
+    id: dial_light_living_room_light_4_color_mode
+    entity_id: light.living_room_light_4_thirdreality
+    attribute: color_mode
+    internal: true
+
+### living_room_light_5
+
+  - platform: homeassistant
+    id: dial_light_living_room_light_5_state
+    entity_id: light.living_room_light_5_thirdreality
+    internal: true
+    on_value:
+      - script.execute: menu_on_ha_update
+
+  - platform: homeassistant
+    id: dial_light_living_room_light_5_modes
+    entity_id: light.living_room_light_5_thirdreality
+    attribute: supported_color_modes
+    internal: true
+
+  - platform: homeassistant
+    id: dial_light_living_room_light_5_rgb
+    entity_id: light.living_room_light_5_thirdreality
+    attribute: rgb_color
+    internal: true
+
+  - platform: homeassistant
+    id: dial_light_living_room_light_5_color_mode
+    entity_id: light.living_room_light_5_thirdreality
+    attribute: color_mode
+    internal: true
+
+### fancy_bulb_standing
+
+  - platform: homeassistant
+    id: dial_light_fancy_bulb_standing_state
+    entity_id: light.fancy_bulb_standing
+    internal: true
+    on_value:
+      - script.execute: menu_on_ha_update
+
+  - platform: homeassistant
+    id: dial_light_fancy_bulb_standing_modes
+    entity_id: light.fancy_bulb_standing
+    attribute: supported_color_modes
+    internal: true
+
+  - platform: homeassistant
+    id: dial_light_fancy_bulb_standing_rgb
+    entity_id: light.fancy_bulb_standing
+    attribute: rgb_color
+    internal: true
+
+  - platform: homeassistant
+    id: dial_light_fancy_bulb_standing_color_mode
+    entity_id: light.fancy_bulb_standing
+    attribute: color_mode
+    internal: true
+
+sensor:
+### living room
+
+  - platform: homeassistant
+    id: dial_light_living_room_brightness
+    entity_id: light.living_room_light_group
     attribute: brightness
     internal: true
     on_value:
       - script.execute: menu_on_ha_update
 
   - platform: homeassistant
-    id: dial_light_living_room_brightness
+    id: dial_light_living_room_color_temp_kelvin
     entity_id: light.living_room_light_group
+    attribute: color_temp_kelvin
+    internal: true
+
+  - platform: homeassistant
+    id: dial_light_living_room_min_color_temp_kelvin
+    entity_id: light.living_room_light_group
+    attribute: min_color_temp_kelvin
+    internal: true
+
+  - platform: homeassistant
+    id: dial_light_living_room_max_color_temp_kelvin
+    entity_id: light.living_room_light_group
+    attribute: max_color_temp_kelvin
+    internal: true
+
+### living room
+
+  - platform: homeassistant
+    id: dial_light_office_brightness
+    entity_id: light.office_light_group
     attribute: brightness
     internal: true
     on_value:
@@ -106,12 +295,6 @@ sensor:
     internal: true
 
   - platform: homeassistant
-    id: dial_light_living_room_color_temp_kelvin
-    entity_id: light.living_room_light_group
-    attribute: color_temp_kelvin
-    internal: true
-
-  - platform: homeassistant
     id: dial_light_bedroom_color_temp_kelvin
     entity_id: light.bedroom_light_group
     attribute: color_temp_kelvin
@@ -120,12 +303,6 @@ sensor:
   - platform: homeassistant
     id: dial_light_office_min_color_temp_kelvin
     entity_id: light.office_light_group
-    attribute: min_color_temp_kelvin
-    internal: true
-
-  - platform: homeassistant
-    id: dial_light_living_room_min_color_temp_kelvin
-    entity_id: light.living_room_light_group
     attribute: min_color_temp_kelvin
     internal: true
 
@@ -142,13 +319,175 @@ sensor:
     internal: true
 
   - platform: homeassistant
-    id: dial_light_living_room_max_color_temp_kelvin
-    entity_id: light.living_room_light_group
+    id: dial_light_bedroom_max_color_temp_kelvin
+    entity_id: light.bedroom_light_group
     attribute: max_color_temp_kelvin
     internal: true
 
+### living_room_1_light
+
   - platform: homeassistant
-    id: dial_light_bedroom_max_color_temp_kelvin
-    entity_id: light.bedroom_light_group
+    id: dial_light_living_room_1_light_brightness
+    entity_id: light.living_room_1_light_sengled
+    attribute: brightness
+    internal: true
+    on_value:
+      - script.execute: menu_on_ha_update
+
+  - platform: homeassistant
+    id: dial_light_living_room_1_light_color_temp_kelvin
+    entity_id: light.living_room_1_light_sengled
+    attribute: color_temp_kelvin
+    internal: true
+
+  - platform: homeassistant
+    id: dial_light_living_room_1_light_min_color_temp_kelvin
+    entity_id: light.living_room_1_light_sengled
+    attribute: min_color_temp_kelvin
+    internal: true
+
+  - platform: homeassistant
+    id: dial_light_living_room_1_light_max_color_temp_kelvin
+    entity_id: light.living_room_1_light_sengled
+    attribute: max_color_temp_kelvin
+    internal: true
+
+### living_room_2_light
+
+  - platform: homeassistant
+    id: dial_light_living_room_2_light_brightness
+    entity_id: light.living_room_2_light_sengled
+    attribute: brightness
+    internal: true
+    on_value:
+      - script.execute: menu_on_ha_update
+
+  - platform: homeassistant
+    id: dial_light_living_room_2_light_color_temp_kelvin
+    entity_id: light.living_room_2_light_sengled
+    attribute: color_temp_kelvin
+    internal: true
+
+  - platform: homeassistant
+    id: dial_light_living_room_2_light_min_color_temp_kelvin
+    entity_id: light.living_room_2_light_sengled
+    attribute: min_color_temp_kelvin
+    internal: true
+
+  - platform: homeassistant
+    id: dial_light_living_room_2_light_max_color_temp_kelvin
+    entity_id: light.living_room_2_light_sengled
+    attribute: max_color_temp_kelvin
+    internal: true
+
+### living_room_light_3
+
+  - platform: homeassistant
+    id: dial_light_living_room_light_3_brightness
+    entity_id: light.living_room_light_3_thirdreality
+    attribute: brightness
+    internal: true
+    on_value:
+      - script.execute: menu_on_ha_update
+
+  - platform: homeassistant
+    id: dial_light_living_room_light_3_color_temp_kelvin
+    entity_id: light.living_room_light_3_thirdreality
+    attribute: color_temp_kelvin
+    internal: true
+
+  - platform: homeassistant
+    id: dial_light_living_room_light_3_min_color_temp_kelvin
+    entity_id: light.living_room_light_3_thirdreality
+    attribute: min_color_temp_kelvin
+    internal: true
+
+  - platform: homeassistant
+    id: dial_light_living_room_light_3_max_color_temp_kelvin
+    entity_id: light.living_room_light_3_thirdreality
+    attribute: max_color_temp_kelvin
+    internal: true
+
+### living_room_light_4
+
+  - platform: homeassistant
+    id: dial_light_living_room_light_4_brightness
+    entity_id: light.living_room_light_4_thirdreality
+    attribute: brightness
+    internal: true
+    on_value:
+      - script.execute: menu_on_ha_update
+
+  - platform: homeassistant
+    id: dial_light_living_room_light_4_color_temp_kelvin
+    entity_id: light.living_room_light_4_thirdreality
+    attribute: color_temp_kelvin
+    internal: true
+
+  - platform: homeassistant
+    id: dial_light_living_room_light_4_min_color_temp_kelvin
+    entity_id: light.living_room_light_4_thirdreality
+    attribute: min_color_temp_kelvin
+    internal: true
+
+  - platform: homeassistant
+    id: dial_light_living_room_light_4_max_color_temp_kelvin
+    entity_id: light.living_room_light_4_thirdreality
+    attribute: max_color_temp_kelvin
+    internal: true
+
+### living_room_light_5
+
+  - platform: homeassistant
+    id: dial_light_living_room_light_5_brightness
+    entity_id: light.living_room_light_5_thirdreality
+    attribute: brightness
+    internal: true
+    on_value:
+      - script.execute: menu_on_ha_update
+
+  - platform: homeassistant
+    id: dial_light_living_room_light_5_color_temp_kelvin
+    entity_id: light.living_room_light_5_thirdreality
+    attribute: color_temp_kelvin
+    internal: true
+
+  - platform: homeassistant
+    id: dial_light_living_room_light_5_min_color_temp_kelvin
+    entity_id: light.living_room_light_5_thirdreality
+    attribute: min_color_temp_kelvin
+    internal: true
+
+  - platform: homeassistant
+    id: dial_light_living_room_light_5_max_color_temp_kelvin
+    entity_id: light.living_room_light_5_thirdreality
+    attribute: max_color_temp_kelvin
+    internal: true
+
+### fancy_bulb_standing
+
+  - platform: homeassistant
+    id: dial_light_fancy_bulb_standing_brightness
+    entity_id: light.fancy_bulb_standing
+    attribute: brightness
+    internal: true
+    on_value:
+      - script.execute: menu_on_ha_update
+
+  - platform: homeassistant
+    id: dial_light_fancy_bulb_standing_color_temp_kelvin
+    entity_id: light.fancy_bulb_standing
+    attribute: color_temp_kelvin
+    internal: true
+
+  - platform: homeassistant
+    id: dial_light_fancy_bulb_standing_min_color_temp_kelvin
+    entity_id: light.fancy_bulb_standing
+    attribute: min_color_temp_kelvin
+    internal: true
+
+  - platform: homeassistant
+    id: dial_light_fancy_bulb_standing_max_color_temp_kelvin
+    entity_id: light.fancy_bulb_standing
     attribute: max_color_temp_kelvin
     internal: true
