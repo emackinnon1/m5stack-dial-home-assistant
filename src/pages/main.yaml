@@ -229,7 +229,7 @@ script:
                                         condition:
                                           lambda: 'return id(in_light_selector);'
                                         then:
-                                          - script.execute: light_selector_confirm
+                                          - script.execute: close_light_selector
                                         else:
                                           - if:
                                               condition:
