@@ -66,6 +66,49 @@ script:
                   return;
                 }
 
+  - id: light_selector_touch_slot
+    parameters:
+      slot_offset: int
+    then:
+      - lambda: |-
+          const int OFFSETS[5] = {-2, -1, 0, 1, 2};
+          bool valid_offset = false;
+          for (int offset : OFFSETS) {
+            if (offset == slot_offset) {
+              valid_offset = true;
+              break;
+            }
+          }
+          if (!valid_offset || id(selector_carousel).is_animating())
+            return;
+
+          const size_t count = id(dial_lights_id).light_count();
+          if (count == 0)
+            return;
+
+          const size_t active = id(dial_lights_id).active_index();
+          size_t selected = 0;
+          if (count == 1) {
+            if (slot_offset != 0)
+              return;
+          } else if (count == 2) {
+            if (slot_offset == 0) {
+              selected = active;
+            } else if ((slot_offset == -1 && active == 1) ||
+                       (slot_offset == 1 && active == 0)) {
+              selected = (active + 1) % count;
+            } else {
+              return;
+            }
+          } else {
+            const int light_count = static_cast<int>(count);
+            selected = static_cast<size_t>(
+                (static_cast<int>(active) + slot_offset + light_count) % light_count);
+          }
+
+          id(dial_lights_id).select_light(selected);
+          id(light_selector_confirm).execute();
+
   - id: refresh_light_selector
     then:
       - lambda: |-
@@ -553,7 +596,9 @@ lvgl:
                         border_width: 0
                         scrollbar_mode: "OFF"
                         pad_all: 0
-                        clickable: false
+                        clickable: true
+                        on_click:
+                          - lambda: 'id(light_selector_touch_slot).execute(-2);'
                         widgets:
                           - image:
                               id: ls_slot_far_up_img
@@ -570,7 +615,9 @@ lvgl:
                         border_width: 0
                         scrollbar_mode: "OFF"
                         pad_all: 0
-                        clickable: false
+                        clickable: true
+                        on_click:
+                          - lambda: 'id(light_selector_touch_slot).execute(-1);'
                         widgets:
                           - image:
                               id: ls_slot_near_up_img
@@ -603,7 +650,9 @@ lvgl:
                         border_width: 0
                         scrollbar_mode: "OFF"
                         pad_all: 0
-                        clickable: false
+                        clickable: true
+                        on_click:
+                          - lambda: 'id(light_selector_touch_slot).execute(0);'
                         widgets:
                           - image:
                               id: ls_slot_center_img
@@ -638,7 +687,9 @@ lvgl:
                         border_width: 0
                         scrollbar_mode: "OFF"
                         pad_all: 0
-                        clickable: false
+                        clickable: true
+                        on_click:
+                          - lambda: 'id(light_selector_touch_slot).execute(1);'
                         widgets:
                           - image:
                               id: ls_slot_near_dn_img
@@ -655,7 +706,9 @@ lvgl:
                         border_width: 0
                         scrollbar_mode: "OFF"
                         pad_all: 0
-                        clickable: false
+                        clickable: true
+                        on_click:
+                          - lambda: 'id(light_selector_touch_slot).execute(2);'
                         widgets:
                           - image:
                               id: ls_slot_far_dn_img
