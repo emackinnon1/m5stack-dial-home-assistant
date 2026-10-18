@@ -1,4 +1,4 @@
-# Screen idle management: dim, return-to-clock, and backlight off.
+# Screen idle management: dim, return-to-menu, and backlight off.
 # States: 0=ACTIVE, 1=DIMMED, 2=OFF
 # Stages are independent; off_ms must be >= dim_ms and return_ms when enabled.
 # Timer: only ha_timer_state=="active" blocks return-to-clock; DIM/OFF ignore Timer.
@@ -171,7 +171,7 @@ script:
   - id: dial_idle_reset_page_flags_except_menu
     then:
       - lambda: |-
-          id(in_clock) = false;
+          id(in_menu) = true;
           id(in_light_selector) = false;
           id(in_light) = false;
           id(in_colorpicker) = false;
@@ -200,13 +200,11 @@ script:
       - if:
           condition:
             lambda: |-
-              if (id(in_timer) || id(in_light_selector) || id(in_light) || id(in_colorpicker) ||
-                  id(in_air) || id(in_music))
-                return true;
-              if (id(in_menu)) return true;
-              return false;
+              return !id(in_menu);
           then:
             - script.execute: dial_idle_reset_page_flags_except_menu
+            - script.execute: menu_sync_selection
+            - script.execute: refresh_menu
             - lvgl.page.show:
                 id: page_menu
                 animation: NONE
@@ -365,7 +363,7 @@ script:
             return;
           }
 
-          // 2) Return to clock — blocked only while HA timer is actively running.
+          // 2) Return to menu — blocked only while HA timer is actively running.
           if (return_ms > 0 && elapsed >= return_ms && !id(idle_return_applied) && idle_state != 2) {
             const std::string ha_timer = id(ha_timer_state).state;
             if (id(ha_connected) && ha_timer == "active") {
@@ -374,7 +372,7 @@ script:
                 id(idle_return_blocked_logged) = true;
               }
             } else {
-              ESP_LOGI("idle", "[IDLE] return_to_clock elapsed_ms=%u", (unsigned) elapsed);
+              ESP_LOGI("idle", "[IDLE] return_to_menu elapsed_ms=%u", (unsigned) elapsed);
               id(dial_idle_return_to_menu).execute();
               id(idle_return_applied) = true;
             }
