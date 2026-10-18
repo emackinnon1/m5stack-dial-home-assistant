@@ -408,6 +408,19 @@ script:
           id(light_color_picker_mode) = id(light_color_picker_mode) == 0 ? 1 : 0;
       - script.execute: refresh_color_preview
 
+  - id: set_color_picker_mode
+    parameters:
+      target_mode: int
+    then:
+      - if:
+          condition:
+            lambda: |-
+              return id(light_supports_rgb) && id(light_supports_color_temp) &&
+                     (target_mode == 0 || target_mode == 1);
+          then:
+            - lambda: 'id(light_color_picker_mode) = target_mode;'
+            - script.execute: refresh_color_preview
+
   - id: confirm_light_color
     then:
       - if:
@@ -547,7 +560,6 @@ script:
             static char hbuf[7];
             snprintf(hbuf, sizeof(hbuf), "%02X%02X%02X", r8, g8, b8);
             lv_label_set_text(id(lbl_hex_val), hbuf);
-            lv_label_set_text(id(lbl_cp_mode), "COLOR");
           } else {
             int kelvin = id(light_white_kelvin);
             int min_k = id(light_white_kelvin_min);
@@ -570,15 +582,28 @@ script:
             static char kbuf[8];
             snprintf(kbuf, sizeof(kbuf), "%dK", kelvin);
             lv_label_set_text(id(lbl_hex_val), kbuf);
-            lv_label_set_text(id(lbl_cp_mode), "WHITE");
           }
           lv_color_t col = lv_color_make(r8, g8, b8);
           lv_obj_set_style_bg_color(id(cw_color_circle), col, LV_STATE_DEFAULT);
           lv_obj_set_style_arc_color(id(cp_arc), col, LV_PART_INDICATOR);
+          const bool supports_both_modes = id(light_supports_rgb) && id(light_supports_color_temp);
+          if (supports_both_modes) {
+            lv_obj_clear_flag(id(cp_mode_switch), LV_OBJ_FLAG_HIDDEN);
+          } else {
+            lv_obj_add_flag(id(cp_mode_switch), LV_OBJ_FLAG_HIDDEN);
+          }
+          const bool rgb_selected = id(light_color_picker_mode) == 0;
+          lv_obj_set_style_bg_color(id(cp_mode_rgb_button),
+              rgb_selected ? lv_color_hex(0x5ABBFD) : lv_color_hex(0x282729), LV_PART_MAIN);
+          lv_obj_set_style_bg_color(id(cp_mode_white_button),
+              rgb_selected ? lv_color_hex(0x282729) : lv_color_hex(0x5ABBFD), LV_PART_MAIN);
+          lv_obj_set_style_text_color(id(lbl_cp_rgb),
+              rgb_selected ? lv_color_hex(0x000000) : lv_color_hex(0xAAAAAA), LV_PART_MAIN);
+          lv_obj_set_style_text_color(id(lbl_cp_white),
+              rgb_selected ? lv_color_hex(0xAAAAAA) : lv_color_hex(0x000000), LV_PART_MAIN);
           const int luminance = (299 * r8 + 587 * g8 + 114 * b8) / 1000;
           const lv_color_t text_col = luminance >= 150 ? lv_color_hex(0x000000) : lv_color_hex(0xFFFFFF);
           lv_obj_set_style_text_color(id(lbl_hex_val), text_col, LV_STATE_DEFAULT);
-          lv_obj_set_style_text_color(id(lbl_cp_mode), text_col, LV_STATE_DEFAULT);
       - lvgl.arc.update:
           id: cp_arc
           value: !lambda |-
@@ -985,15 +1010,72 @@ lvgl:
                     - script.execute: confirm_light_color
                   widgets:
                     - label:
-                        id: lbl_cp_mode
-                        align: TOP_MID
-                        y: 18
-                        text: "COLOR"
-                        text_font: font_cp_mode
-                        text_color: 0xAAAAAA
-                    - label:
                         id: lbl_hex_val
                         align: CENTER
                         text: "A98FFF"
                         text_font: font_cp_hue
                         text_color: 0xFFFFFF
+
+              - obj:
+                  id: cp_mode_switch
+                  align: CENTER
+                  x: 0
+                  y: -40
+                  width: 104
+                  height: 24
+                  radius: 12
+                  bg_color: col_light_track
+                  bg_opa: COVER
+                  border_width: 0
+                  pad_all: 2
+                  clickable: false
+                  scrollbar_mode: "OFF"
+                  widgets:
+                    - obj:
+                        id: cp_mode_rgb_button
+                        align: LEFT_MID
+                        x: 0
+                        width: 50
+                        height: 20
+                        radius: 10
+                        bg_color: col_light_blue
+                        bg_opa: COVER
+                        border_width: 0
+                        clickable: true
+                        scrollbar_mode: "OFF"
+                        on_click:
+                          - script.execute:
+                              id: set_color_picker_mode
+                              target_mode: 0
+                        widgets:
+                          - label:
+                              id: lbl_cp_rgb
+                              align: CENTER
+                              text: "COLOR"
+                              text_font: font_cp_mode
+                              text_color: 0x000000
+                              clickable: false
+                    - obj:
+                        id: cp_mode_white_button
+                        align: RIGHT_MID
+                        x: 0
+                        width: 50
+                        height: 20
+                        radius: 10
+                        bg_color: col_light_track
+                        bg_opa: COVER
+                        border_width: 0
+                        clickable: true
+                        scrollbar_mode: "OFF"
+                        on_click:
+                          - script.execute:
+                              id: set_color_picker_mode
+                              target_mode: 1
+                        widgets:
+                          - label:
+                              id: lbl_cp_white
+                              align: CENTER
+                              text: "WHITE"
+                              text_font: font_cp_mode
+                              text_color: 0xAAAAAA
+                              clickable: false
