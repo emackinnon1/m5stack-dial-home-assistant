@@ -167,6 +167,17 @@ script:
           id(in_air) = false;
           id(in_music) = false;
           id(in_timer) = false;
+  
+  - id: dial_idle_reset_page_flags_except_menu
+    then:
+      - lambda: |-
+          id(in_clock) = false;
+          id(in_light_selector) = false;
+          id(in_light) = false;
+          id(in_colorpicker) = false;
+          id(in_air) = false;
+          id(in_music) = false;
+          id(in_timer) = false;
 
   - id: dial_idle_return_to_clock
     then:
@@ -182,6 +193,22 @@ script:
             - script.execute: dial_idle_reset_page_flags
             - lvgl.page.show:
                 id: page_clock
+                animation: NONE
+  
+  - id: dial_idle_return_to_menu
+    then:
+      - if:
+          condition:
+            lambda: |-
+              if (id(in_timer) || id(in_light_selector) || id(in_light) || id(in_colorpicker) ||
+                  id(in_air) || id(in_music))
+                return true;
+              if (id(in_menu)) return true;
+              return false;
+          then:
+            - script.execute: dial_idle_reset_page_flags_except_menu
+            - lvgl.page.show:
+                id: page_menu
                 animation: NONE
 
   - id: dial_idle_dim
@@ -348,7 +375,7 @@ script:
               }
             } else {
               ESP_LOGI("idle", "[IDLE] return_to_clock elapsed_ms=%u", (unsigned) elapsed);
-              id(dial_idle_return_to_clock).execute();
+              id(dial_idle_return_to_menu).execute();
               id(idle_return_applied) = true;
             }
           }
