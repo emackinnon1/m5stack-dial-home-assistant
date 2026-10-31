@@ -65,7 +65,11 @@ substitutions:
   music_player_entity: media_player.living_room
 ```
 
-Select the entity that actually plays the audio. Home Assistant supplies player state, transport actions, volume and available metadata, including `media_title`, `media_artist`, `media_duration` and `media_position`. SendSpin is optional and currently supplies only 100 × 100 album artwork when a compatible SendSpin source is available.
+Select the entity that actually plays the audio. Home Assistant supplies player state, transport actions, volume and available metadata, including `media_title`, `media_artist`, `media_duration` and `media_position`. All Dial controls continue targeting this entity, not the Sendspin group entity.
+
+The Music page uses ESPHome's native Sendspin hub, group media player, metadata sensors and image platform. Home Assistant title and artist take precedence, with Sendspin as a fallback. Native progress sensors update every 200 ms; Home Assistant progress remains available when Sendspin is absent. Artwork uses 100 × 100 JPEG/RGB565 images with a 200 ms fade-out and 300 ms fade-in. Clearing the stream restores the placeholder; decoding errors are logged and leave the displayed artwork intact.
+
+Use ESPHome 2026.10.1 or newer; reproducible local builds are pinned to 2026.10.1. ESPHome 2026.10 requires Music Assistant 2.10.7+ stable or 2.11.0b4+ beta. The migration targets Music Assistant 2.10.9. Permit mDNS discovery and TCP port 8928 to the server. Connections are encrypted, but default unpaired access is enabled, allowing any compatible server on the network to connect. No pairing UI or speaker/audio pipeline is configured. See the [native Sendspin documentation](https://esphome.io/components/sendspin/) and [2026.10 release notes](https://esphome.io/blog/2026/10/21/esphome-2026-10/) before upgrading this experimental protocol.
 
 ### Timer
 

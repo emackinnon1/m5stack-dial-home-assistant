@@ -7,15 +7,6 @@ substitutions:
   icon_music: "\uF004"
   icon_volume: "\uF005"
 
-external_components:
-  - source: github://emackinnon1/m5stack-dial-home-assistant@c0d6a0bd8401486ca1fa7ad3ae3bfbcaff036b94
-    components:
-      - generic_image
-      - media_source
-      - sendspin
-    refresh: 0s
-  
-
 font:
   - file:
       family: DM+Sans
@@ -51,11 +42,37 @@ color:
     hex: "1A1040"
 
 image:
-  - file: src/assets/images/music.png
+  - platform: file
+    file: src/assets/images/music.png
     id: place_holder
     type: RGB565
     transparency: alpha_channel
     resize: 100x100
+  - platform: sendspin
+    id: sendspin_artwork_slot
+    format: JPEG
+    type: RGB565
+    resize: 100x100
+    source: album
+    current_image:
+      id: sendspin_cover_art
+    transition_image:
+      id: sendspin_previous_art
+    on_image_display:
+      - script.execute: transition_music_artwork
+    on_image_clear:
+      - script.stop: transition_music_artwork
+      - lambda: |-
+          lv_anim_del(id(img_music_cover), nullptr);
+          lv_obj_set_style_opa(id(img_music_cover), LV_OPA_COVER, 0);
+          id(music_has_artwork) = false;
+      - lvgl.image.update:
+          id: img_music_cover
+          src: place_holder
+    on_image_error:
+      - logger.log:
+          level: ERROR
+          format: "Sendspin artwork decoding failed; retaining current artwork"
 
 sendspin:
   id: sendspin_hub
@@ -64,43 +81,18 @@ media_player:
   - platform: sendspin
     id: sendspin_media_player
     name: "M5Stack Dial"
-    volume_increment: 10
-
-generic_image:
-  - platform: sendspin
-    id: sendspin_cover_art
-    format: jpg
-    type: rgb565
-    resize: 100x100
-    image_source: ALBUM
-    on_image_decoded:
-      - logger.log: "Album image decoded"
+    volume_increment: 10%
+    on_state:
       - lambda: |-
-          lv_obj_t *obj = id(img_music_cover);
-          static lv_anim_t a;
-          lv_anim_init(&a);
-          lv_anim_set_var(&a, obj);
-          lv_anim_set_values(&a, LV_OPA_COVER, LV_OPA_TRANSP);
-          lv_anim_set_time(&a, 200);
-          lv_anim_set_exec_cb(&a, [](void *var, int32_t v) {
-            lv_obj_set_style_opa((lv_obj_t *)var, v, 0);
-          });
-          lv_anim_start(&a);
-      - delay: 200ms    
-      - lvgl.image.update:
-          id: img_music_cover
-          src: sendspin_cover_art
-      - lambda: |-
-          lv_obj_t *obj = id(img_music_cover);
-          static lv_anim_t a;
-          lv_anim_init(&a);
-          lv_anim_set_var(&a, obj);
-          lv_anim_set_values(&a, LV_OPA_TRANSP, LV_OPA_COVER);
-          lv_anim_set_time(&a, 300);
-          lv_anim_set_exec_cb(&a, [](void *var, int32_t v) {
-            lv_obj_set_style_opa((lv_obj_t *)var, v, 0);
-          });
-          lv_anim_start(&a);
+          if ((int32_t)(id(music_volume_override_until_ms) - millis()) > 0) return;
+          if (id(ha_connected) && std::isfinite(id(ha_media_volume).state)) return;
+          float volume = id(sendspin_media_player).volume;
+          if (!std::isfinite(volume)) return;
+          int v = (int)(volume * 100.0f + 0.5f);
+          id(music_volume) = std::max(0, std::min(100, v));
+      - script.execute: refresh_music_volume
+      - script.execute: refresh_music_playback
+      - script.execute: menu_on_ha_update
 
 text_sensor:
   - platform: homeassistant
@@ -133,50 +125,11 @@ text_sensor:
     on_value:
       - script.execute: refresh_music_metadata
 
-  - platform: sendspin
-    id: sendspin_playback_state
-    type: playback_state
-    internal: true
-    on_value:
-      - lambda: |-
-          ESP_LOGD("music", "SendSpin playback state: %s", x.c_str());
-          bool playing = (x == "playing");
-          id(music_playing) = playing;
-          lv_label_set_text(id(play_label), playing ? "${icon_pause}" : "${icon_play}");
-          auto duration = id(sendspin_hub).get_track_duration_ms();
-          if (duration > 0) {
-            id(local_duration_ms) = duration;
-            id(local_progress_ms) = id(sendspin_hub).get_track_progress_ms();
-            id(local_progress_sync_ms) = millis();
-          }
-      - script.execute: refresh_music_progress
-      - script.execute: menu_on_ha_update
-
   - platform: homeassistant
     id: media_player_status
     entity_id: ${music_player_entity}
     on_value:
-      - lambda: |-
-          ESP_LOGD("Media Player", "Read media player status: %s", x.c_str());
-          if ( x == "idle" || x == "paused"
-              || x == "unavailable" || x == "off"
-              || x == "unknown" )
-          {
-            id(music_playing) = false;
-            lv_label_set_text(id(play_label), "${icon_play}");
-          }
-          else if ( x == "playing" || x == "buffering" ) {
-            id(music_playing) = true;
-            lv_label_set_text(id(play_label), "${icon_pause}");
-          }
-          // read track progress and duration when state change
-          auto progress = id(sendspin_hub).get_track_progress_ms();
-          auto duration = id(sendspin_hub).get_track_duration_ms();
-          if (duration > 0) {
-            id(local_duration_ms) = duration;
-            id(local_progress_ms) = progress;
-            id(local_progress_sync_ms) = millis();
-          }
+      - script.execute: refresh_music_playback
       - script.execute: refresh_music_progress
       - script.execute: menu_on_ha_update
 
@@ -197,18 +150,35 @@ sensor:
       - script.execute: refresh_music_volume
 
   - platform: sendspin
-    id: sendspin_controller_volume
-    type: controller_volume
+    id: sendspin_track_progress
+    type: track_progress
+    update_interval: 200ms
     internal: true
     on_value:
       - lambda: |-
-          if (x != x) return;
-          if ((int32_t)(id(music_volume_override_until_ms) - millis()) > 0) return;
-          int v = (int)(x + 0.5f);
-          if (v < 0) v = 0;
-          if (v > 100) v = 100;
-          id(music_volume) = v;
-      - script.execute: refresh_music_volume
+          if (!std::isfinite(x) || x < 0) {
+            id(last_spin_progress_seen_ms) = 0;
+            return;
+          }
+          id(local_progress_ms) = (int)x;
+          id(local_progress_sync_ms) = millis();
+          id(last_spin_progress_seen_ms) = millis();
+
+  - platform: sendspin
+    id: sendspin_track_duration
+    type: track_duration
+    internal: true
+    on_value:
+      - lambda: |-
+          if (std::isfinite(x) && x > 0) {
+            id(local_duration_ms) = (int)x;
+          } else {
+            float ha_duration = id(ha_media_duration).state;
+            id(local_duration_ms) = std::isfinite(ha_duration) && ha_duration > 0
+                ? (int)(ha_duration * 1000.0f + 0.5f) : 0;
+            id(last_spin_progress_seen_ms) = 0;
+          }
+      - script.execute: refresh_music_progress
 
   - platform: homeassistant
     id: ha_media_duration
@@ -258,10 +228,6 @@ globals:
     type: uint32_t
     restore_value: false
     initial_value: '0'
-  - id: last_spin_progress_ms
-    type: uint32_t
-    restore_value: false
-    initial_value: '0'
   - id: last_spin_progress_seen_ms
     type: uint32_t
     restore_value: false
@@ -277,8 +243,58 @@ globals:
   - id: music_feedback_btn
     type: int
     initial_value: '0'
+  - id: music_has_artwork
+    type: bool
+    initial_value: 'false'
 
 script:
+  - id: transition_music_artwork
+    then:
+      - if:
+          condition:
+            lambda: 'return id(music_has_artwork);'
+          then:
+            - lvgl.image.update:
+                id: img_music_cover
+                src: sendspin_previous_art
+      - lambda: |-
+          lv_anim_t a;
+          lv_anim_init(&a);
+          lv_anim_set_var(&a, id(img_music_cover));
+          lv_anim_set_values(&a, LV_OPA_COVER, LV_OPA_TRANSP);
+          lv_anim_set_time(&a, 200);
+          lv_anim_set_exec_cb(&a, [](void *var, int32_t v) {
+            lv_obj_set_style_opa((lv_obj_t *)var, v, 0);
+          });
+          lv_anim_start(&a);
+      - delay: 200ms
+      - lvgl.image.update:
+          id: img_music_cover
+          src: sendspin_cover_art
+      - lambda: |-
+          id(music_has_artwork) = true;
+          lv_anim_t a;
+          lv_anim_init(&a);
+          lv_anim_set_var(&a, id(img_music_cover));
+          lv_anim_set_values(&a, LV_OPA_TRANSP, LV_OPA_COVER);
+          lv_anim_set_time(&a, 300);
+          lv_anim_set_exec_cb(&a, [](void *var, int32_t v) {
+            lv_obj_set_style_opa((lv_obj_t *)var, v, 0);
+          });
+          lv_anim_start(&a);
+      - delay: 300ms
+      - sendspin.image.transition_finished: sendspin_artwork_slot
+
+  - id: refresh_music_playback
+    then:
+      - lambda: |-
+          if ((int32_t)(id(music_state_override_until_ms) - millis()) > 0) return;
+          id(music_playing) =
+              id(sendspin_media_player).state == media_player::MEDIA_PLAYER_STATE_PLAYING ||
+              (id(ha_connected) && (id(media_player_status).state == "playing" ||
+                                   id(media_player_status).state == "buffering"));
+          lv_label_set_text(id(play_label), id(music_playing) ? "${icon_pause}" : "${icon_play}");
+
   - id: open_music
     then:
       - globals.set: {id: in_music, value: 'true'}
@@ -300,7 +316,7 @@ script:
     then:
       - lambda: |-
           auto pick = [](const std::string &ha, const std::string &ss) -> std::string {
-            if (!ha.empty()) return ha;
+            if (!ha.empty() && ha != "unknown" && ha != "unavailable") return ha;
             if (!ss.empty()) return ss;
             return "";
           };
@@ -378,11 +394,9 @@ script:
       - script.execute:
           id: music_transport_feedback
           wait_for_finish: false
+      - script.execute: refresh_music_playback
       - lambda: |-
-          bool current_playing = id(sendspin_playback_state).state == "playing" ||
-                                 id(media_player_status).state == "playing" ||
-                                 id(media_player_status).state == "buffering";
-          bool will_play = !current_playing;
+          bool will_play = !id(music_playing);
           id(music_playing) = will_play;
           id(music_state_override_until_ms) = millis() + 2500;
           if (will_play && id(local_progress_sync_ms) == 0) {
@@ -671,29 +685,10 @@ interval:
 
   - interval: 200ms
     then:
+      - script.execute: refresh_music_playback
       - lambda: |-
           uint32_t now_ms = millis();
-          bool server_playing = id(sendspin_playback_state).state == "playing" ||
-                                id(media_player_status).state == "playing" ||
-                                id(media_player_status).state == "buffering";
-          bool use_local_state = (int32_t)(id(music_state_override_until_ms) - now_ms) > 0;
-          bool playing = use_local_state ? id(music_playing) : server_playing;
-          id(music_playing) = playing;
-          lv_label_set_text(id(play_label), playing ? "${icon_pause}" : "${icon_play}");
-
-          uint32_t spin_pos = id(sendspin_hub).get_track_progress_ms();
-          auto spin_dur = id(sendspin_hub).get_track_duration_ms();
-          if (spin_dur > 0) {
-            id(local_duration_ms) = spin_dur;
-            if (spin_pos != id(last_spin_progress_ms)) {
-              id(local_progress_ms) = spin_pos;
-              id(local_progress_sync_ms) = now_ms;
-              id(last_spin_progress_ms) = spin_pos;
-              id(last_spin_progress_seen_ms) = now_ms;
-            } else if (id(last_spin_progress_seen_ms) == 0) {
-              id(last_spin_progress_seen_ms) = now_ms;
-            }
-          }
+          bool playing = id(music_playing);
 
           int dur = id(local_duration_ms);
           if (dur <= 0) {
@@ -703,8 +698,9 @@ interval:
             return;
           }
 
-          bool spin_progress_stale = spin_dur > 0 && (now_ms - id(last_spin_progress_seen_ms)) > 800;
-          if (playing && (spin_dur <= 0 || spin_progress_stale)) {
+          bool spin_progress_stale = id(last_spin_progress_seen_ms) == 0 ||
+                                    (now_ms - id(last_spin_progress_seen_ms)) > 800;
+          if (playing && spin_progress_stale) {
             uint32_t elapsed_ms = id(local_progress_sync_ms) == 0 ? 200 : now_ms - id(local_progress_sync_ms);
             if (elapsed_ms > 1000) elapsed_ms = 1000;
             id(local_progress_ms) += elapsed_ms;

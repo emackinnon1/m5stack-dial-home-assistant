@@ -1,2 +1,2 @@
-# Minimum tested ESPHome version for this package.
-esphome==2026.7.0
+# Native Sendspin migration target; pinned for reproducible builds.
+esphome==2026.10.1
