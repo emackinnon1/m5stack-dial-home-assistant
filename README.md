@@ -6,7 +6,7 @@
 
 ### A circular Home Assistant controller for M5Stack Dial, built with ESPHome and LVGL.
 
-[![ESPHome](https://img.shields.io/badge/ESPHome-2026.7.2-blue?style=flat-square&logo=esphome)](https://esphome.io/)
+[![ESPHome](https://img.shields.io/badge/ESPHome-2026.10.1-blue?style=flat-square&logo=esphome)](https://esphome.io/)
 [![Platform](https://img.shields.io/badge/Platform-ESP32--S3-red?style=flat-square&logo=espressif)](https://www.espressif.com/)
 [![Display](https://img.shields.io/badge/Display-GC9A01A%20240x240-purple?style=flat-square)](#hardware)
 [![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](#license)
@@ -74,7 +74,7 @@ M5Stack Dial V1.1 is the tested target. GPIO46 power hold is configured for V1.1
 
 - A compatible M5Stack Dial.
 - Home Assistant.
-- ESPHome.
+- ESPHome 2026.10.1 or newer (local builds are pinned to 2026.10.1).
 - Wi-Fi access for the Dial.
 - Home Assistant entities only for the features and information you want to enable.
 
@@ -181,7 +181,9 @@ The Menu is more than a launcher: its current selection shows a live subtitle. T
 
 ### Music
 
-The Music page is controlled through `music_player_entity`. Home Assistant provides playback state, play/pause and transport actions, volume, title and metadata, plus duration and position when available. SendSpin is optional and is currently used only to provide 100 × 100 album artwork when a compatible SendSpin source is available. Album art is intentionally kept small for the Dial's memory budget.
+The Music page is controlled through `music_player_entity`. All play/pause, transport and volume commands still go through Home Assistant. ESPHome's native Sendspin component provides optional metadata, group state, volume feedback and 100 × 100 album artwork, with Home Assistant-first title and artist fallback. Without a Sendspin connection, Home Assistant supplies state and available progress information. Album artwork retains its 200 ms fade-out and 300 ms fade-in and is intentionally small for the Dial's memory budget.
+
+Sendspin requires a compatible Music Assistant server: ESPHome 2026.10 supports Music Assistant 2.10.7+ on the stable branch (2.10.9 is the migration target), or 2.11.0b4+ on the beta branch. Allow mDNS discovery and TCP port 8928 between the Dial and server. Native Sendspin encrypts connections and defaults to allowing unpaired servers on the network; no pairing UI or audio playback pipeline is configured. The protocol remains experimental, so later upgrades should be tested before flashing.
 
 ### Climate
 
@@ -218,7 +220,7 @@ m5stack-dial-home-assistant/
 │   ├── main/                 # Hardware, entities, idle logic and light sensors
 │   ├── pages/                # LVGL pages for clock, menu and features
 │   └── assets/               # Fonts and embedded images
-├── components/               # Local ESPHome components, including SendSpin
+├── components/               # Custom dial_lights and dial_carousel components
 ├── docs/                     # Configuration and maintenance documentation
 ├── hardware/                 # Hardware-related assets
 ├── LICENSE
